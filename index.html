@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Admin Operations Tracker — Rizqi Aprilianes</title>
+
+  <meta
+    name="description"
+    content="Excel-based administrative operations tracker for data validation, SLA monitoring, data quality, and operational reporting."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --paper: #fffaf1;
+      --ink: #172033;
+      --muted: #707683;
+      --line: #d9d5cc;
+      --yellow: #ffd95a;
+      --blue: #dfe8ff;
+      --mint: #d7f2e7;
+      --peach: #ffd9c7;
+      --white: #ffffff;
+      --navy: #17324d;
+      --red: #9b1c1c;
+      --orange: #8a5a00;
+      --green: #176b54;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      background:
+        radial-gradient(circle at 92% 3%, #e7edff 0, transparent 22%),
+        radial-gradient(circle at 4% 12%, #fff0b4 0, transparent 18%),
+        var(--paper);
+      color: var(--ink);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: auto;
+      padding: 28px 24px 80px;
+    }
+
+    .mono {
+      font-family: "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      font-size: .72rem;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 8px 0 40px;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+
+    .topnav {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .72rem;
+      text-transform: uppercase;
+    }
+
+    .topnav a {
+      border-bottom: 1px solid transparent;
+      padding-bottom: 3px;
+    }
+
+    .topnav a:hover {
+      border-color: var(--ink);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 50px;
+      align-items: end;
+      padding: 30px 0 70px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 22px;
+      padding: 8px 12px;
+      background: var(--yellow);
+      border: 1px solid var(--ink);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(4rem, 9vw, 7.6rem);
+      letter-spacing: -.075em;
+      line-height: .84;
+      max-width: 850px;
+    }
+
+    .hero-copy {
+      font-size: 1.12rem;
+      line-height: 1.75;
+      color: var(--muted);
+      max-width: 620px;
+      margin-top: 30px;
+    }
+
+    .hero-side {
+      border-left: 1px solid var(--ink);
+      padding-left: 28px;
+    }
+
+    .hero-side h3 {
+      font-size: 1.4rem;
+      margin: 12px 0;
+      letter-spacing: -.03em;
+    }
+
+    .hero-side p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 26px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid var(--ink);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .73rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      transition: .18s ease;
+    }
+
+    .button.primary {
+      background: var(--ink);
+      color: white;
+    }
+
+    .button.secondary {
+      background: transparent;
+    }
+
+    .button:hover {
+      background: var(--yellow);
+      color: var(--ink);
+      transform: translateY(-2px);
+    }
+
+    .rule {
+      height: 1px;
+      background: var(--line);
+      margin: 0 0 60px;
+    }
+
+    .section {
+      padding: 20px 0 70px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: 30px;
+      margin-bottom: 35px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      letter-spacing: -.06em;
+      line-height: 1;
+    }
+
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      max-width: 680px;
+      line-height: 1.7;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .kpi {
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--ink);
+      min-height: 150px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-number {
+      font-size: 2.75rem;
+      font-weight: 700;
+      letter-spacing: -.055em;
+    }
+
+    .kpi small {
+      color: var(--muted);
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border: 1px solid var(--ink);
+      background: white;
+    }
+
+    .workflow-item {
+      padding: 22px 18px 25px;
+      min-height: 165px;
+      border-right: 1px solid var(--ink);
+    }
+
+    .workflow-item:last-child {
+      border-right: 0;
+    }
+
+    .workflow-number {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .7rem;
+      color: var(--muted);
+    }
+
+    .workflow-item h3 {
+      font-size: 1.2rem;
+      margin: 34px 0 8px;
+      letter-spacing: -.025em;
+    }
+
+    .workflow-item p {
+      font-size: .9rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .ops-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--ink);
+      padding: 24px;
+    }
+
+    .panel h3 {
+      margin: 0 0 25px;
+      letter-spacing: -.03em;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 160px 1fr 45px;
+      gap: 14px;
+      align-items: center;
+      margin: 18px 0;
+    }
+
+    .bar-label {
+      font-size: .9rem;
+    }
+
+    .bar-track {
+      height: 14px;
+      border: 1px solid var(--ink);
+      background: #f1eee8;
+    }
+
+    .bar {
+      height: 100%;
+      background: var(--ink);
+    }
+
+    .bar-value {
+      text-align: right;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .78rem;
+    }
+
+    .alert-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .alert {
+      padding: 16px;
+      border: 1px solid var(--ink);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+    }
+
+    .alert strong {
+      font-size: 1.55rem;
+    }
+
+    .alert.warning {
+      background: var(--peach);
+    }
+
+    .alert.attention {
+      background: var(--yellow);
+    }
+
+    .alert.info {
+      background: var(--blue);
+    }
+
+    .alert.good {
+      background: var(--mint);
+    }
+
+        .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .feature {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.6);
+      padding: 23px;
+      min-height: 190px;
+    }
+
+    .feature h3 {
+      margin: 22px 0 8px;
+      letter-spacing: -.025em;
+    }
+
+    .feature p {
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--ink);
+      background: white;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 850px;
+    }
+
+    th {
+      background: var(--navy);
+      color: white;
+      text-align: left;
+      font-family: "IBM Plex Mono", monospace;
+      text-transform: uppercase;
+      font-size: .68rem;
+      letter-spacing: .04em;
+      padding: 13px;
+    }
+
+    td {
+      padding: 14px 13px;
+      border-top: 1px solid var(--line);
+      font-size: .88rem;
+    }
+
+    .tag {
+      display: inline-block;
+      border: 1px solid currentColor;
+      padding: 4px 7px;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: .65rem;
+      text-transform: uppercase;
+    }
+
+    .tag.green {
+      color: var(--green);
+      background: #e9f7f1;
+    }
+
+    .tag.orange {
+      color: var(--orange);
+      background: #fff4d7;
+    }
+
+    .tag.red {
+      color: var(--red);
+      background: #fde8e8;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      margin-top: 25px;
+    }
+
+    .architecture-box {
+      border: 1px solid var(--ink);
+      background: white;
+      padding: 24px;
+      min-height: 130px;
+    }
+
+    .architecture-box h3 {
+      margin: 18px 0 7px;
+    }
+
+    .architecture-box p {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .arrow {
+      font-size: 1.8rem;
+    }
+
+    .closing {
+      padding: 60px 0 20px;
+      text-align: center;
+    }
+
+    .closing h2 {
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      letter-spacing: -.06em;
+      margin: 0 auto 18px;
+      max-width: 800px;
+      line-height: .95;
+    }
+
+    .closing p {
+      max-width: 590px;
+      margin: auto;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    footer {
+      margin-top: 70px;
+      padding-top: 25px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: .83rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .section-head,
+      .ops-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-side {
+        border-left: 0;
+        border-top: 1px solid var(--ink);
+        padding-left: 0;
+        padding-top: 25px;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .workflow {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-item {
+        border-right: 0;
+        border-bottom: 1px solid var(--ink);
+      }
+
+      .workflow-item:last-child {
+        border-bottom: 0;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .architecture {
+        grid-template-columns: 1fr;
+      }
+
+      .arrow {
+        transform: rotate(90deg);
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding: 20px 16px 55px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      h1 {
+        font-size: 4rem;
+      }
+
+      .kpi-grid,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-row {
+        grid-template-columns: 125px 1fr 38px;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="page">
+
+    <header class="topbar">
+
+      <div class="brand">
+        Rizqi Aprilianes
+      </div>
+
+      <nav class="topnav">
+        <a href="#overview">Overview</a>
+        <a href="#workflow">Workflow</a>
+        <a href="#workbook">Workbook</a>
+        <a href="#skills">Skills</a>
+      </nav>
+
+    </header>
+
+
+    <section class="hero">
+
+      <div>
+
+        <div class="eyebrow mono">
+          Admin Operations · Portfolio Project
+        </div>
+
+        <h1>
+          Keep records
+          clean.
+          Keep work
+          moving.
+        </h1>
+
+        <p class="hero-copy">
+          An Excel-based administrative operations system
+          designed to standardize incoming records, detect
+          data-quality issues, monitor processing deadlines,
+          and turn day-to-day administrative activity into
+          useful operational reporting.
+        </p>
+
+        <div class="actions">
+
+          <a
+            class="button primary"
+            href="Admin_Operations_Portfolio.xlsx"
+            download
+          >
+            ↓ Download Excel
+          </a>
+
+          <a
+            class="button secondary"
+            href="https://github.com/rzqprlns/admin-operations-tracker"
+            target="_blank"
+          >
+            ↗ View Repository
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <aside class="hero-side">
+
+        <div class="mono">
+          Project Brief / 01
+        </div>
+
+        <h3>
+          Administrative work is a data problem too.
+        </h3>
+
+        <p>
+          Clean categories, complete documents, clear ownership,
+          controlled deadlines, and consistent reporting all depend
+          on reliable administrative data.
+        </p>
+
+        <p>
+          This project demonstrates how spreadsheet tools can turn
+          a simple record tracker into an operational control system.
+        </p>
+
+      </aside>
+
+    </section>
+
+
+    <div class="rule"></div>
+
+
+    <section
+      class="section"
+      id="overview"
+    >
+
+      <div class="section-head">
+
+        <div class="mono">
+          01 / Overview
+        </div>
+
+        <div>
+
+          <h2>
+            A small operations control center.
+          </h2>
+
+          <p>
+            The workbook contains 120 synthetic administrative records
+            covering incoming documents, assigned owners, priority,
+            completion status, due dates, SLA monitoring, data
+            completeness, and duplicate checks.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="kpi-grid">
+
+        <article class="kpi">
+          <div class="mono">Total Records</div>
+          <div class="kpi-number">120</div>
+          <small>synthetic administrative records</small>
+        </article>
+
+        <article class="kpi">
+          <div class="mono">Completed</div>
+          <div class="kpi-number">57</div>
+          <small>records closed in the sample</small>
+        </article>
+
+        <article class="kpi">
+          <div class="mono">Open Backlog</div>
+          <div class="kpi-number">63</div>
+          <small>records still requiring processing</small>
+        </article>
+
+        <article class="kpi">
+          <div class="mono">SLA Compliance</div>
+          <div class="kpi-number">22.5%</div>
+          <small>formula-driven monitoring result</small>
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <section
+      class="section"
+      id="workflow"
+    >
+
+      <div class="section-head">
+
+        <div class="mono">
+          02 / Workflow
+        </div>
+
+        <div>
+
+          <h2>
+            From incoming record to follow-up.
+          </h2>
+
+          <p>
+            The workflow is designed around practical administrative
+            controls rather than complex analytics.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="workflow">
+
+        <article class="workflow-item">
+
+          <span class="workflow-number">
+            01
+          </span>
+
+          <h3>Receive</h3>
+
+          <p>
+            Record incoming documents and basic request information.
+          </p>
+
+        </article>
+
+
+        <article class="workflow-item">
+
+          <span class="workflow-number">
+            02
+          </span>
+
+          <h3>Standardize</h3>
+
+          <p>
+            Use dropdowns and reference lists to control input categories.
+          </p>
+
+        </article>
+
+
+        <article class="workflow-item">
+
+          <span class="workflow-number">
+            03
+          </span>
+
+          <h3>Validate</h3>
+
+          <p>
+            Check completeness, duplicates, ownership, and priority.
+          </p>
+
+        </article>
+
+
+        <article class="workflow-item">
+
+          <span class="workflow-number">
+            04
+          </span>
+
+          <h3>Monitor</h3>
+
+          <p>
+            Calculate processing time and compare records against SLA.
+          </p>
+
+        </article>
+
+
+        <article class="workflow-item">
+
+          <span class="workflow-number">
+            05
+          </span>
+
+          <h3>Report</h3>
+
+          <p>
+            Summarize backlog, status, exceptions, and staff workload.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <section class="section">
+
+      <div class="section-head">
+
+        <div class="mono">
+          03 / Monitor
+        </div>
+
+        <div>
+
+          <h2>
+            What needs attention?
+          </h2>
+
+          <p>
+            A useful admin tracker should make exceptions visible,
+            not force someone to manually inspect every row.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="ops-grid">
+
+        <div class="panel">
+
+          <div class="mono">
+            Records by Status
+          </div>
+
+          <h3>
+            Operational workload
+          </h3>
+
+
+          <div class="bar-row">
+            <div class="bar-label">Completed</div>
+            <div class="bar-track">
+              <div
+                class="bar"
+                style="width:100%"
+              ></div>
+            </div>
+            <div class="bar-value">57</div>
+          </div>
+
+
+          <div class="bar-row">
+            <div class="bar-label">Pending</div>
+            <div class="bar-track">
+              <div
+                class="bar"
+                style="width:47%"
+              ></div>
+            </div>
+            <div class="bar-value">27</div>
+          </div>
+
+
+          <div class="bar-row">
+            <div class="bar-label">Incomplete</div>
+            <div class="bar-track">
+              <div
+                class="bar"
+                style="width:33%"
+              ></div>
+            </div>
+            <div class="bar-value">19</div>
+          </div>
+
+
+          <div class="bar-row">
+            <div class="bar-label">Escalated</div>
+            <div class="bar-track">
+              <div
+                class="bar"
+                style="width:30%"
+              ></div>
+            </div>
+            <div class="bar-value">17</div>
+          </div>
+
+        </div>
+
+
+        <div class="alert-grid">
+
+          <div class="alert attention">
+            <span>Pending Verification</span>
+            <strong>27</strong>
+          </div>
+
+          <div class="alert warning">
+            <span>Incomplete Records</span>
+            <strong>19</strong>
+          </div>
+
+          <div class="alert info">
+            <span>Missing Documents</span>
+            <strong>12</strong>
+          </div>
+
+          <div class="alert good">
+            <span>Duplicate Records</span>
+            <strong>3</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section
+      class="section"
+      id="workbook"
+    >
+
+      <div class="section-head">
+
+        <div class="mono">
+          04 / Workbook
+        </div>
+
+        <div>
+
+          <h2>
+            The spreadsheet is the product.
+          </h2>
+
+          <p>
+            Instead of converting the project into a Python application,
+            the workbook remains the core deliverable so the formulas,
+            validation rules, and spreadsheet workflow can be inspected directly.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Record ID</th>
+              <th>Document</th>
+              <th>Owner</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>SLA</th>
+              <th>Completeness</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr>
+              <td>ADM-0018</td>
+              <td>Purchase Order</td>
+              <td>Admin B</td>
+              <td>
+                <span class="tag red">
+                  High
+                </span>
+              </td>
+              <td>Pending Verification</td>
+              <td>
+                <span class="tag orange">
+                  Overdue
+                </span>
+              </td>
+              <td>Complete</td>
+            </tr>
+
+            <tr>
+              <td>ADM-0038</td>
+              <td>Customer Form</td>
+              <td>Admin D</td>
+              <td>
+                <span class="tag green">
+                  Low
+                </span>
+              </td>
+              <td>Completed</td>
+              <td>
+                <span class="tag green">
+                  Within SLA
+                </span>
+              </td>
+              <td>Complete</td>
+            </tr>
+
+            <tr>
+              <td>ADM-0074</td>
+              <td>Invoice</td>
+              <td>Admin A</td>
+              <td>
+                <span class="tag orange">
+                  Medium
+                </span>
+              </td>
+              <td>Incomplete</td>
+              <td>
+                <span class="tag orange">
+                  Overdue
+                </span>
+              </td>
+              <td>
+                <span class="tag red">
+                  Missing
+                </span>
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <section
+      class="section"
+      id="skills"
+    >
+
+      <div class="section-head">
+
+        <div class="mono">
+          05 / Skills
+        </div>
+
+        <div>
+
+          <h2>
+            Built for practical admin work.
+          </h2>
+
+          <p>
+            The project focuses on spreadsheet controls that are useful
+            in administrative, back-office, reporting, and operational roles.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="feature-grid">
+
+        <article class="feature">
+          <span class="mono">Input Control</span>
+          <h3>Data Validation</h3>
+          <p>
+            Dropdown-based fields reduce inconsistent document,
+            owner, priority, and status categories.
+          </p>
+        </article>
+
+        <article class="feature">
+          <span class="mono">Data Quality</span>
+          <h3>Exception Checks</h3>
+          <p>
+            Missing documents and potential duplicate records are
+            made visible for follow-up.
+          </p>
+        </article>
+
+        <article class="feature">
+          <span class="mono">Monitoring</span>
+          <h3>SLA Tracking</h3>
+          <p>
+            Formula-driven processing time identifies whether records
+            are within SLA, late, or overdue.
+          </p>
+        </article>
+
+        <article class="feature">
+          <span class="mono">Workflow</span>
+          <h3>Status Tracking</h3>
+          <p>
+            Records move through completed, pending verification,
+            incomplete, and escalated states.
+          </p>
+        </article>
+
+        <article class="feature">
+          <span class="mono">Reporting</span>
+          <h3>KPI Dashboard</h3>
+          <p>
+            Operational totals summarize backlog, completed work,
+            SLA compliance, and outstanding quality issues.
+          </p>
+        </article>
+
+        <article class="feature">
+          <span class="mono">Operations</span>
+          <h3>Owner Monitoring</h3>
+          <p>
+            Workload and completion counts can be reviewed by assigned PIC.
+          </p>
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <section class="section">
+
+      <div class="section-head">
+
+        <div class="mono">
+          06 / Architecture
+        </div>
+
+        <div>
+
+          <h2>
+            Simple tools, structured workflow.
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="architecture">
+
+        <div class="architecture-box">
+          <span class="mono">Input</span>
+          <h3>Admin Tracker</h3>
+          <p>
+            Structured records, dates, owner assignments,
+            priorities, and document information.
+          </p>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="architecture-box">
+          <span class="mono">Control</span>
+          <h3>Validation + Formulas</h3>
+          <p>
+            Standardization, processing-time calculation,
+            exception flags, and SLA logic.
+          </p>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="architecture-box">
+          <span class="mono">Output</span>
+          <h3>Operations Dashboard</h3>
+          <p>
+            Backlog, completion, workload, SLA, and data-quality monitoring.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="closing">
+
+      <div class="mono">
+        Synthetic Administrative Case Study
+      </div>
+
+      <h2>
+        Good administration starts with reliable records.
+      </h2>
+
+      <p>
+        All records used in this project are synthetic and were created
+        specifically for portfolio demonstration. No real customer,
+        employee, or confidential company data is included.
+      </p>
+
+      <div
+        class="actions"
+        style="justify-content:center"
+      >
+
+        <a
+          class="button primary"
+          href="Admin_Operations_Portfolio.xlsx"
+          download
+        >
+          ↓ Download Workbook
+        </a>
+
+        <a
+          class="button secondary"
+          href="https://github.com/rzqprlns/admin-operations-tracker"
+          target="_blank"
+        >
+          ↗ View GitHub
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <footer>
+
+      <span>
+        Rizqi Aprilianes
+      </span>
+
+      <span>
+        Administrative Operations · Data Management · Data Analytics
+      </span>
+
+      <span>
+        Portfolio Project / 2026
+      </span>
+
+    </footer>
+
+  </main>
+
+</body>
+</html>
